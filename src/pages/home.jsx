@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
-class Home extends Component {
-  url = "https://companyapp20231212003216.azurewebsites.net";
+export const REACT_APP_URL = "https://companyapp20231212003216.azurewebsites.net";
 
+class Home extends Component {
   constructor(props) {
     super(props);
     this.onChangeDepartmentName = this.onChangeDepartmentName.bind(this);
@@ -34,7 +34,7 @@ class Home extends Component {
       submittedEmployee: false,
     };
 
-    fetch(url + "/employees", {
+    fetch(REACT_APP_URL + "/employees", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
       .then((response) => response.json())
@@ -44,7 +44,7 @@ class Home extends Component {
         });
       });
 
-    fetch(url + "/departments", {
+    fetch(REACT_APP_URL  + "/departments", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
       .then((response) => response.json())
@@ -93,7 +93,7 @@ class Home extends Component {
       body: JSON.stringify(data),
     };
     fetch(
-      url + "/employees",
+      REACT_APP_URL + "/employees",
       requestOptions
     )
       .then((response) => response.json())
@@ -102,7 +102,7 @@ class Home extends Component {
           submittedEmployee: true,
         });
 
-        fetch(url + "/employees", {
+        fetch(REACT_APP_URL + "/employees", {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         })
           .then((response) => response.json())
@@ -150,7 +150,7 @@ class Home extends Component {
       body: JSON.stringify(data),
     };
     fetch(
-      url + "/departments",
+      REACT_APP_URL + "/departments",
       requestOptions
     )
       .then((response) => response.json())
@@ -159,7 +159,7 @@ class Home extends Component {
           submittedDepartment: true,
         });
 
-        fetch(url + "/departments", {
+        fetch(REACT_APP_URL + "/departments", {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         })
           .then((response) => response.json())
