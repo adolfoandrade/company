@@ -1,5 +1,5 @@
-import axios from "axios";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import api from "../api";
 
 const AuthContext = createContext();
 
@@ -14,20 +14,20 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      axios.interceptors.request.use(
-        config => {
-          config.headers['Authorization'] = `Bearer ${token}`;
-              return config;
-          },
-          error => {
-              return Promise.reject(error);
-          }
+      api.interceptors.request.use(
+        (config) => {
+          config.headers.Authorization = `Bearer ${token}`;
+          return config;
+        },
+        (error) => Promise.reject(error)
       );
-      axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+      //api.defaults.headers.common["Authorization"] = "Bearer " + token;
       localStorage.setItem("token", token);
+      console.log("token set");
     } else {
-      delete axios.defaults.headers.common["Authorization"];
+      delete api.defaults.headers.common["Authorization"];
       localStorage.removeItem("token");
+      console.log("token removed");
     }
   }, [token]);
 
