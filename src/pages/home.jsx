@@ -33,25 +33,36 @@ class Home extends Component {
       submittedDepartment: false,
       submittedEmployee: false,
     };
+  }
 
-    fetch(REACT_APP_URL + "/employees", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    })
+  fetchWithAuth(url, options = {}) {
+    const token = localStorage.getItem("token");
+    options.headers = {
+      ...options.headers,
+      'Authorization': `Bearer ${token}`
+    };
+    return fetch(url, options);
+  }
+
+  componentDidMount() {
+    this.fetchWithAuth(REACT_APP_URL + "/employees")
       .then((response) => response.json())
       .then((data) => {
         this.setState({
           employees: data,
         });
+      }).catch((error) => {
+        console.log(error);
       });
 
-    fetch(REACT_APP_URL  + "/departments", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    })
+    this.fetchWithAuth(REACT_APP_URL  + "/departments")
       .then((response) => response.json())
       .then((data) => {
         this.setState({
           departments: data,
         });
+      }).catch((error) => {
+        console.log(error);
       });
   }
 
