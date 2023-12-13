@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import Config from "../token";
 
-export const REACT_APP_URL = "https://companyapp20231212003216.azurewebsites.net";
+export const REACT_APP_URL =
+  "https://companyapp20231212003216.azurewebsites.net";
 
 class Home extends Component {
   constructor(props) {
@@ -36,34 +38,47 @@ class Home extends Component {
   }
 
   fetchWithAuth(url, options = {}) {
-    const token = localStorage.getItem("token");
-    options.headers = {
-      ...options.headers,
-      'Authorization': `Bearer ${token}`
-    };
-    return fetch(url, options);
+    const token = Config.getToken();
+    console.log("token", token);
+    if (token) {
+      options.headers = {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+      };
+      return fetch(url, options);
+    }
   }
 
   componentDidMount() {
-    this.fetchWithAuth(REACT_APP_URL + "/employees")
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          employees: data,
+    const token = Config.getToken();
+    if (token) {
+      let options = {};
+      options.headers = {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+      };
+      fetch(REACT_APP_URL + "/employees", options)
+        .then((response) => response.json())
+        .then((data) => {
+          this.setState({
+            employees: data,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      }).catch((error) => {
-        console.log(error);
-      });
 
-    this.fetchWithAuth(REACT_APP_URL  + "/departments")
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          departments: data,
+      fetch(REACT_APP_URL + "/departments", options)
+        .then((response) => response.json())
+        .then((data) => {
+          this.setState({
+            departments: data,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      }).catch((error) => {
-        console.log(error);
-      });
+    }
   }
 
   onChangeEmployeeName(e) {
@@ -98,15 +113,16 @@ class Home extends Component {
       departmentId: this.state.employeeDepartmentId,
     };
 
+    const token = Config.getToken();
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token")}` },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(data),
     };
-    fetch(
-      REACT_APP_URL + "/employees",
-      requestOptions
-    )
+    fetch(REACT_APP_URL + "/employees", requestOptions)
       .then((response) => response.json())
       .then((data) => {
         this.setState({
@@ -114,7 +130,7 @@ class Home extends Component {
         });
 
         fetch(REACT_APP_URL + "/employees", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${token}` },
         })
           .then((response) => response.json())
           .then((data) => {
@@ -155,15 +171,16 @@ class Home extends Component {
       description: this.state.departmentDescription,
     };
 
+    const token = Config.getToken();
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token")}` },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
       body: JSON.stringify(data),
     };
-    fetch(
-      REACT_APP_URL + "/departments",
-      requestOptions
-    )
+    fetch(REACT_APP_URL + "/departments", requestOptions)
       .then((response) => response.json())
       .then((data) => {
         this.setState({
@@ -171,7 +188,7 @@ class Home extends Component {
         });
 
         fetch(REACT_APP_URL + "/departments", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${token}` },
         })
           .then((response) => response.json())
           .then((data) => {

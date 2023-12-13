@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import Config from '../token';
 
 const AuthContext = createContext();
 
@@ -23,6 +24,7 @@ const AuthProvider = ({ children }) => {
               return Promise.reject(error);
           }
       );
+      Config.setToken(token);
       axios.defaults.headers.common["Authorization"] = "Bearer " + token;
       localStorage.setItem("token", token);
     } else {
